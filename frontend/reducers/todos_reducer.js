@@ -1,6 +1,7 @@
 import { RECEIVE_TODOS,
          RECEIVE_TODO, 
-         REMOVE_TODO } from '../actions/todo_actions';
+         REMOVE_TODO, 
+         TODO_ERROR } from '../actions/todo_actions';
 
 const todosReducer = (state = {}, action) => {
   Object.freeze(state);
@@ -19,6 +20,8 @@ const todosReducer = (state = {}, action) => {
             nextState = Object.assign({}, state);
             delete nextState[action.todo.id];
             return nextState;
+        case TODO_ERROR:
+            alert(action.error);
         default:
             return state;
     }

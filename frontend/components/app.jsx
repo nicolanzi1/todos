@@ -2,7 +2,7 @@ import React from 'react';
 import TodoListContainer from './todos/todo_list_container';
 
 const App = () => (
-    <div>
+    <div className="app">
         <h1>My Cool Todos App</h1>
         <TodoListContainer />
     </div>
