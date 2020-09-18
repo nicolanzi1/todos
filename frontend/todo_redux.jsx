@@ -1,5 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import configureStore from './store/store';
+import todosReducer from './reducers/todos_reducer';
+
+const store = configureStore();
+
+window.store = store;
 
 function Test() {
     return (
