@@ -43,8 +43,8 @@ export default class StepForm extends React.Component {
                 <label>Description:
                     <input
                         className="input"
-                        ref="title"
-                        value={ this.state.title }
+                        ref="body"
+                        value={ this.state.body }
                         placeholder="google soap store"
                         onChange={ this.update('body') }
                         required />
