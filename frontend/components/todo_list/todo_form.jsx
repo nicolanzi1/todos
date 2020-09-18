@@ -35,7 +35,7 @@ export default class TodoForm extends React.Component {
                         className="input"
                         ref="title"
                         value={this.state.title}
-                        paceholder="buy milk"
+                        placeholder="Call mom..."
                         onChange={this.update('title')}
                         required/>
                 </label>

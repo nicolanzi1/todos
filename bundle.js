@@ -90,17 +90,20 @@
 /*!******************************************!*\
   !*** ./frontend/actions/todo_actions.js ***!
   \******************************************/
-/*! exports provided: RECEIVE_TODOS, RECEIVE_TODO, receiveTodos, receiveTodo */
+/*! exports provided: RECEIVE_TODOS, RECEIVE_TODO, REMOVE_TODO, receiveTodos, receiveTodo, removeTodo */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_TODOS", function() { return RECEIVE_TODOS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVE_TODO", function() { return RECEIVE_TODO; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_TODO", function() { return REMOVE_TODO; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "receiveTodos", function() { return receiveTodos; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "receiveTodo", function() { return receiveTodo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeTodo", function() { return removeTodo; });
 var RECEIVE_TODOS = "RECEIVE_TODOS";
 var RECEIVE_TODO = "RECEIVE_TODO";
+var REMOVE_TODO = "REMOVE_TODO";
 var receiveTodos = function receiveTodos(todos) {
   return {
     type: RECEIVE_TODOS,
@@ -110,6 +113,12 @@ var receiveTodos = function receiveTodos(todos) {
 var receiveTodo = function receiveTodo(todo) {
   return {
     type: RECEIVE_TODO,
+    todo: todo
+  };
+};
+var removeTodo = function removeTodo(todo) {
+  return {
+    type: REMOVE_TODO,
     todo: todo
   };
 };
@@ -259,7 +268,7 @@ var TodoForm = /*#__PURE__*/function (_React$Component) {
         className: "input",
         ref: "title",
         value: this.state.title,
-        paceholder: "buy milk",
+        placeholder: "Call mom...",
         onChange: this.update('title'),
         required: true
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", null, "Body:", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("textarea", {
@@ -297,6 +306,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TodoListItem; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_todo_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../actions/todo_actions */ "./frontend/actions/todo_actions.js");
+/* harmony import */ var _todos_todo_list_container__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../todos/todo_list_container */ "./frontend/components/todos/todo_list_container.jsx");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -321,23 +332,56 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
 var TodoListItem = /*#__PURE__*/function (_React$Component) {
   _inherits(TodoListItem, _React$Component);
 
   var _super = _createSuper(TodoListItem);
 
   function TodoListItem(props) {
+    var _this;
+
     _classCallCheck(this, TodoListItem);
 
-    return _super.call(this, props);
+    _this = _super.call(this, props);
+    _this.state = {
+      detail: false
+    };
+    _this.toggleTodo = _this.toggleTodo.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(TodoListItem, [{
+    key: "toggleTodo",
+    value: function toggleTodo(e) {
+      e.preventDefault();
+      var toggledTodo = Object.assign({}, this.props.todo, {
+        done: !this.props.todo.done
+      });
+      this.props.receiveTodo(toggledTodo);
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this$props = this.props,
+          todo = _this$props.todo,
+          updateTodo = _this$props.updateTodo,
+          removeTodo = _this$props.removeTodo;
+      var title = todo.title,
+          done = todo.done;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: "todo-list-item"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, this.props.todo.title));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "todo-header"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: done ? "done" : "undone",
+        onClick: this.toggleTodo
+      }, done ? "Undo" : "Done"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "delete-button",
+        value: todo.id,
+        onClick: removeTodo
+      }, "Delete Todo")));
     }
   }]);
 
@@ -456,7 +500,20 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     receiveTodo: function receiveTodo(todo) {
       return dispatch(Object(_actions_todo_actions__WEBPACK_IMPORTED_MODULE_2__["receiveTodo"])(todo));
-    }
+    },
+    removeTodo: function (_removeTodo) {
+      function removeTodo() {
+        return _removeTodo.apply(this, arguments);
+      }
+
+      removeTodo.toString = function () {
+        return _removeTodo.toString();
+      };
+
+      return removeTodo;
+    }(function () {
+      return dispatch(removeTodo(todo));
+    })
   };
 };
 
@@ -532,6 +589,11 @@ var todosReducer = function todosReducer() {
       var newTodo = _defineProperty({}, action.todo.id, action.todo);
 
       return Object.assign({}, state, newTodo);
+
+    case _actions_todo_actions__WEBPACK_IMPORTED_MODULE_0__["REMOVE_TODO"]:
+      nextState = Object.assign({}, state);
+      delete nextState[action.todo.id];
+      return nextState;
 
     default:
       return state;
