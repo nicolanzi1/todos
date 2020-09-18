@@ -1,7 +1,10 @@
 import { RECEIVE_TODOS,
-         RECEIVE_TODO, REMOVE_TODO } from '../actions/todo_actions';
+         RECEIVE_TODO, 
+         REMOVE_TODO } from '../actions/todo_actions';
 
 const todosReducer = (state = initialState, action) => {
+  Object.freeze(state);
+  let nextState = {};
 
     switch(action.type) {
         case RECEIVE_TODOS:

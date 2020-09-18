@@ -1,12 +1,17 @@
 import React from 'react';
-import { removeTodo } from '../../actions/todo_actions';
-import todo_list_container from '../todos/todo_list_container';
+import TodoDetailViewContainer from './todo_detail_view_container';
 
 export default class TodoListItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {detail: false};
+        this.toggleDetail = this.toggleDetail.bind(this);
         this.toggleTodo = this.toggleTodo.bind(this);
+    }
+
+    toggleDetail(e) {
+        e.preventDefault();
+        this.setState({ detail: !this.state.detail });
     }
 
     toggleTodo(e) {
@@ -21,23 +26,24 @@ export default class TodoListItem extends React.Component {
     }
 
     render() {
-        const { todo, updateTodo, removeTodo } = this.props;
+        const { todo, updateTodo } = this.props;
         const { title, done } = todo;
+        let detail;
+        if (this.state.detail) {
+            detail = <TodoDetailViewContainer todo={ todo } />;
+        }
 
         return (
             <li className="todo-list-item">
                 <div className="todo-header">
-                    <h3>{ title }</h3>
+                    <h3><a onClick={ this.toggleDetail }>{ title }</a></h3>
                     <button
                         className={ done ? "done" : "undone" }
                         onClick={ this.toggleTodo }>
                         { done ? "Undo" : "Done" }
                     </button>
-                    <button
-                    className="delete-button"
-                    value={todo.id}
-                    onClick={removeTodo}>Delete Todo</button>
                 </div>
+                { detail }
             </li>
         );
     }
